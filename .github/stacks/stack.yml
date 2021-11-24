@@ -1,52 +1,48 @@
-   
 version: 0.1.0                                            
 
-name: Test Pooja         
-description: Test Pooja     
+name: Deploy a Next.js site to GitHub pages  
+description: A stack to deploy a nextjs based website to Github Pages               
 
-branding:                                              
+branding:                                                # stack branding 
  icon: 'package'
  color: 'black'
 
-inputs:                                                
-    
-  - name: NODE_VERSION                                 
-    default: v12.22.4                              
-    description: NODE_VERSION for nodejs stack         
-    validvalues:                                       
+inputs:                                                  # stack inputs 
+  - name: NODE_VERSION                                   # stack input name
+    default: v12.22.4                                    # stack input default value provided
+    description: NODE_VERSION for nodejs stack           # stack input description
+    validvalues:                                         # stack input valid values that can be selected
     - v12.22.4
     - v14.17.4
     
   - name: GITHUB_PAT
     description: GitHub PAT with repo and workflow permissions
-    is-secret: true
     required: true
+    is-secret: true
 
-configs:                                               
+configs:
   repo-metadata:
-     parameters:
-       description: 'Setup your Nextjs site in Github Pages'
-       secrets: 
-         - name: GH_PAT
-           value: ${{inputs.GITHUB_PAT}}
-       topics:                                            
-       - nextjs
-       - github-pages
+    parameters:
+      description: 'NextJS app on GH pages'
+      secrets: 
+      - name: GH_PAT
+        value: ${{inputs.GITHUB_PAT}}
+      topics:
+      - nextjs
+      - github-pages
 
-  branches:                                            
+  branches:
     - name: main
       parameters:
-        dismiss-stale-reviews: true                      
-        required-approving-review-count: 1
-        require-code-owner-reviews: true
+        enforce-admins: true
 
-  environments:                                        
+  environments:
     - name: development
-      parameters: 
+      parameters:
         protected-branches: false
-        custom-branch-policies:
+        allowed-branch-rules:
           - main
           - releases/*
 
 init:
- uses: ".github/workflows/stack-init.yaml"
+  uses: "stack-init.yaml"
